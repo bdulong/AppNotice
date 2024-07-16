@@ -15,7 +15,16 @@ const formatterNomDossier = (nomDossier) => {
 // Fonction modifiée pour générer le contenu
 const genererContenu = (nomDossier, sousDossiers) => {
   const sousDossiersHTML = sousDossiers
-    .map(sd => `<button className='CTA-notice'>{t(\`sousDossiers.${sd}\`)}</button>`)
+    .map(sd => `
+      <a 
+        href={'/dossiers/${nomDossier}/16 - Notice ${nomDossier.substring(0, 8)}/${sd}'}
+        target="_blank"
+        rel="noopener noreferrer"
+        className='CTA-notice'
+      >
+        <img src={'/icons/${sd}.svg'} alt={'${sd} icon'} className="button-icon" onError={(e) => {e.target.style.display = 'none'}} />
+        {t('sousDossiers.${sd}')}
+      </a>`)
     .join("\n")
     .replace(/\n/g, "\n\t\t\t\t\t");
 
@@ -33,7 +42,7 @@ const Page = () => {
         <main>
             <Header />
             <div className='content'>
-                <h1>${nomDossier}</h1>
+                <h1>${nomDossier.replace(/^\d+-/, '').replace(/_/g, ' ')}</h1>
                 <div className='CTA-container'>
                     ${sousDossiersHTML}
                 </div>

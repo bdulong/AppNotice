@@ -1,11 +1,10 @@
 import '../../App.css'
 import './header.css'
-import Logo from '../../images/logo.png'
 
 export default function Header() {
   return (
     <div className='header-container'>
-      <img className='logo' src={Logo} alt='Logo' ></img>
+      <img className='logo' src='img/logo-mlplv.png' alt='Logo' ></img>
     </div>
   )
 }

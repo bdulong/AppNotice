@@ -20,6 +20,10 @@
 }
 
 .CTA-notice {
+	display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 	height: 145px;
 	width: 145px;
 	cursor: pointer;
@@ -32,4 +36,10 @@ h1 {
 	margin: 0;
 	font-size: 36px;
 	font-weight: bold;
+}
+
+.button-icon {
+    width: 30px;
+    height: 30px;
+	margin: 0 0 6px 0;
 }
