@@ -32,7 +32,7 @@ const genererContenu = (nomDossierFormate, nomDossierOriginal, sousDossiers) => 
         </a>`).join("\n");
 
       return `
-      <div className='sous-dossier'>
+      <div className='CTA-notice'>
         <h2>{t('sousDossiers.${sd}')}</h2>
         <img src={'/icons/${sd}.svg'} alt={'${sd} icon'} className="folder-icon" onError={(e) => {e.target.style.display = 'none'}} />
         ${pdfLinks}

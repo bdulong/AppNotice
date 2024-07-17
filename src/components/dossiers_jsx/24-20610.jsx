@@ -15,7 +15,7 @@ const Page = () => {
                 <h1>SEPHORA SAS</h1>
                 <div className='CTA-container'>
                     
-					      <div className='sous-dossier'>
+					      <div className='CTA-notice'>
 					        <h2>{t('sousDossiers.Demantelement')}</h2>
 					        <img src={'/icons/Demantelement.svg'} alt={'Demantelement icon'} className="folder-icon" onError={(e) => {e.target.style.display = 'none'}} />
 					        
@@ -29,7 +29,7 @@ const Page = () => {
 					        </a>
 					      </div>
 					
-					      <div className='sous-dossier'>
+					      <div className='CTA-notice'>
 					        <h2>{t('sousDossiers.Electricite')}</h2>
 					        <img src={'/icons/Electricite.svg'} alt={'Electricite icon'} className="folder-icon" onError={(e) => {e.target.style.display = 'none'}} />
 					        
@@ -43,7 +43,7 @@ const Page = () => {
 					        </a>
 					      </div>
 					
-					      <div className='sous-dossier'>
+					      <div className='CTA-notice'>
 					        <h2>{t('sousDossiers.Emballage')}</h2>
 					        <img src={'/icons/Emballage.svg'} alt={'Emballage icon'} className="folder-icon" onError={(e) => {e.target.style.display = 'none'}} />
 					        
@@ -57,7 +57,7 @@ const Page = () => {
 					        </a>
 					      </div>
 					
-					      <div className='sous-dossier'>
+					      <div className='CTA-notice'>
 					        <h2>{t('sousDossiers.Installation')}</h2>
 					        <img src={'/icons/Installation.svg'} alt={'Installation icon'} className="folder-icon" onError={(e) => {e.target.style.display = 'none'}} />
 					        
@@ -71,7 +71,7 @@ const Page = () => {
 					        </a>
 					      </div>
 					
-					      <div className='sous-dossier'>
+					      <div className='CTA-notice'>
 					        <h2>{t('sousDossiers.Transport')}</h2>
 					        <img src={'/icons/Transport.svg'} alt={'Transport icon'} className="folder-icon" onError={(e) => {e.target.style.display = 'none'}} />
 					        
