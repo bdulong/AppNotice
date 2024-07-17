@@ -35,7 +35,7 @@ if (!key) {
 
 // Générer les nouvelles lignes d'import et de Route
 const newImportsAndRoutes = files.map(file => {
-	const randomName = generateRandomName(file, key);
+	const randomName = generateRandomName(file.substring(0, 8), key);
 	const importLine = `import ${randomName} from './components/dossiers_jsx/${file}';`;
 	const routeLine = `\t\t\t\t\t\t<Route path="/${randomName}" element={<${randomName} />} />`;
 	return { importLine, routeLine };
