@@ -4,7 +4,6 @@ const path = require("path");
 const dossiersPath = path.join(__dirname, "..", "dossiers");
 const dossiersjsxPath = path.join(__dirname, "..", "components", "dossiers_jsx");
 
-// Fonction pour formater le nom du dossier (inchangée)
 const formatterNomDossier = (nomDossier) => {
   let formateNom = nomDossier.replace(/\d+/g, "");
   formateNom = formateNom.replace(/-/g, "");
@@ -12,19 +11,33 @@ const formatterNomDossier = (nomDossier) => {
   return formateNom.trim();
 };
 
-// Fonction modifiée pour générer le contenu
-const genererContenu = (nomDossier, sousDossiers) => {
+const getPDFFiles = (dir) => {
+  return fs.readdirSync(dir)
+    .filter(file => file.toLowerCase().endsWith('.pdf'))
+    .map(file => ({ name: path.parse(file).name, fullPath: file }));
+};
+
+const genererContenu = (nomDossierFormate, nomDossierOriginal, sousDossiers) => {
   const sousDossiersHTML = sousDossiers
-    .map(sd => `
-      <a 
-        href={'/dossiers/${nomDossier}/16 - Notice ${nomDossier.substring(0, 8)}/${sd}'}
-        target="_blank"
-        rel="noopener noreferrer"
-        className='CTA-notice'
-      >
-        <img src={'/icons/${sd}.svg'} alt={'${sd} icon'} className="button-icon" onError={(e) => {e.target.style.display = 'none'}} />
-        {t('sousDossiers.${sd}')}
-      </a>`)
+    .map(sd => {
+      const pdfFiles = getPDFFiles(path.join(dossiersPath, nomDossierOriginal, `16 - Notice ${nomDossierOriginal.substring(0, 8)}`, sd));
+      const pdfLinks = pdfFiles.map(pdf => `
+        <a 
+          href={'/dossiers/${nomDossierOriginal}/16 - Notice ${nomDossierOriginal.substring(0, 8)}/${sd}/${pdf.fullPath}'}
+          target="_blank"
+          rel="noopener noreferrer"
+          className='PDF-link'
+        >
+          {t('pdfFiles.${pdf.name}')}
+        </a>`).join("\n");
+
+      return `
+      <div className='sous-dossier'>
+        <h2>{t('sousDossiers.${sd}')}</h2>
+        <img src={'/icons/${sd}.svg'} alt={'${sd} icon'} className="folder-icon" onError={(e) => {e.target.style.display = 'none'}} />
+        ${pdfLinks}
+      </div>`;
+    })
     .join("\n")
     .replace(/\n/g, "\n\t\t\t\t\t");
 
@@ -42,7 +55,7 @@ const Page = () => {
         <main>
             <Header />
             <div className='content'>
-                <h1>${nomDossier.replace(/^\d+-/, '').replace(/_/g, ' ')}</h1>
+                <h1>${nomDossierFormate.replace(/^\d+-/, '').replace(/_/g, ' ')}</h1>
                 <div className='CTA-container'>
                     ${sousDossiersHTML}
                 </div>
@@ -56,7 +69,6 @@ export default Page;
 `;
 };
 
-// Le reste du code reste inchangé
 fs.readdir(dossiersjsxPath, (err, fichiersJSXExistants) => {
   if (err) {
     console.error('Erreur lors de la lecture du dossier "dossiers_jsx":', err);
@@ -71,19 +83,19 @@ fs.readdir(dossiersjsxPath, (err, fichiersJSXExistants) => {
       return;
     }
 
-    dossiers.forEach((dossier) => {
-      if (!/^\d{2}/.test(dossier)) {
-        console.log(`Le dossier "${dossier}" ne correspond pas au format attendu.`);
+    dossiers.forEach((dossierOriginal) => {
+      if (!/^\d{2}/.test(dossierOriginal)) {
+        console.log(`Le dossier "${dossierOriginal}" ne correspond pas au format attendu.`);
         return;
       }
 
-      const nomFichierJSX = dossier.substring(0, 8) + ".jsx";
+      const nomFichierJSX = dossierOriginal.substring(0, 8) + ".jsx";
       const cheminFichierJSX = path.join(dossiersjsxPath, nomFichierJSX);
 
       if (fichiersExistantSet.has(nomFichierJSX)) {
         console.log(`Le fichier ${nomFichierJSX} existe déjà.`);
       } else {
-        const dossierPath = path.join(dossiersPath, dossier);
+        const dossierPath = path.join(dossiersPath, dossierOriginal);
 
         fs.readdir(dossierPath, (err, contenuDossier) => {
           if (err) {
@@ -94,7 +106,7 @@ fs.readdir(dossiersjsxPath, (err, fichiersJSXExistants) => {
           const dossier16 = contenuDossier.find(item => item.startsWith('16'));
           
           if (!dossier16) {
-            console.log(`Aucun dossier commençant par "16" trouvé dans "${dossier}".`);
+            console.log(`Aucun dossier commençant par "16" trouvé dans "${dossierOriginal}".`);
             return;
           }
 
@@ -106,8 +118,8 @@ fs.readdir(dossiersjsxPath, (err, fichiersJSXExistants) => {
               return;
             }
 
-            const nomDossierFormate = formatterNomDossier(dossier);
-            const contenu = genererContenu(nomDossierFormate, sousDossiers);
+            const nomDossierFormate = formatterNomDossier(dossierOriginal);
+            const contenu = genererContenu(nomDossierFormate, dossierOriginal, sousDossiers);
 
             if (typeof contenu !== 'string') {
               console.error(`Erreur: genererContenu a retourné ${typeof contenu} au lieu d'une chaîne de caractères.`);
