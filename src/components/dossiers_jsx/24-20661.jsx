@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next';
 import './dossiers_jsx-style.css';
 import '../../App.css';
@@ -7,6 +7,12 @@ import CTALanguage from '../CTALanguage/CTALanguage.jsx';
 
 const Page = () => {
     const { t } = useTranslation();
+
+    useEffect(() => {
+      window.openPDF = (filePath) => {
+        window.open('/dossiers/' + filePath, '_blank');
+      };
+    }, []);
 
     return (
         <main>
@@ -17,9 +23,11 @@ const Page = () => {
                     
 					        <div className='CTA-notice'>
 					          <a 
-					            href={'/dossiers/24-20661_ANTONIO_PUIG_S.A/16 - Notice 24-20661/Demantelement/NOTICE - 80100943 TG 23 BAR ON COUNTER - nouveauygf001.pdf'}
-					            target="_blank"
-					            rel="noopener noreferrer"
+					            href={'#file=' + btoa('24-20661_ANTONIO_PUIG_S.A/16 - Notice 24-20661/Demantelement/NOTICE - 80100943 TG 23 BAR ON COUNTER - nouveauygf001.pdf')}
+					            onClick={(e) => {
+					              e.preventDefault();
+					              window.openPDF('24-20661_ANTONIO_PUIG_S.A/16 - Notice 24-20661/Demantelement/NOTICE - 80100943 TG 23 BAR ON COUNTER - nouveauygf001.pdf');
+					            }}
 					            className='PDF-link'
 					          >
 					            <img src={'/icons/Demantelement.svg'} alt={'Demantelement icon'} className="folder-icon" onError={(e) => {e.target.style.display = 'none'}} />
@@ -29,9 +37,11 @@ const Page = () => {
 					
 					        <div className='CTA-notice'>
 					          <a 
-					            href={'/dossiers/24-20661_ANTONIO_PUIG_S.A/16 - Notice 24-20661/Demantelement/NOTICE - 80100944 TG 23 BAR ON COUNTER  - NON LUMINEUX 001.pdf'}
-					            target="_blank"
-					            rel="noopener noreferrer"
+					            href={'#file=' + btoa('24-20661_ANTONIO_PUIG_S.A/16 - Notice 24-20661/Demantelement/NOTICE - 80100944 TG 23 BAR ON COUNTER  - NON LUMINEUX 001.pdf')}
+					            onClick={(e) => {
+					              e.preventDefault();
+					              window.openPDF('24-20661_ANTONIO_PUIG_S.A/16 - Notice 24-20661/Demantelement/NOTICE - 80100944 TG 23 BAR ON COUNTER  - NON LUMINEUX 001.pdf');
+					            }}
 					            className='PDF-link'
 					          >
 					            <img src={'/icons/Demantelement.svg'} alt={'Demantelement icon'} className="folder-icon" onError={(e) => {e.target.style.display = 'none'}} />
@@ -41,9 +51,11 @@ const Page = () => {
 					
 					        <div className='CTA-notice'>
 					          <a 
-					            href={'/dossiers/24-20661_ANTONIO_PUIG_S.A/16 - Notice 24-20661/Electricite/CLARINS - KIT ALIM - NOTICE.pdf'}
-					            target="_blank"
-					            rel="noopener noreferrer"
+					            href={'#file=' + btoa('24-20661_ANTONIO_PUIG_S.A/16 - Notice 24-20661/Electricite/CLARINS - KIT ALIM - NOTICE.pdf')}
+					            onClick={(e) => {
+					              e.preventDefault();
+					              window.openPDF('24-20661_ANTONIO_PUIG_S.A/16 - Notice 24-20661/Electricite/CLARINS - KIT ALIM - NOTICE.pdf');
+					            }}
 					            className='PDF-link'
 					          >
 					            <img src={'/icons/Electricite.svg'} alt={'Electricite icon'} className="folder-icon" onError={(e) => {e.target.style.display = 'none'}} />
@@ -53,9 +65,11 @@ const Page = () => {
 					
 					        <div className='CTA-notice'>
 					          <a 
-					            href={'/dossiers/24-20661_ANTONIO_PUIG_S.A/16 - Notice 24-20661/Emballage/NOTICE-DEBALLAGE.pdf'}
-					            target="_blank"
-					            rel="noopener noreferrer"
+					            href={'#file=' + btoa('24-20661_ANTONIO_PUIG_S.A/16 - Notice 24-20661/Emballage/NOTICE-DEBALLAGE.pdf')}
+					            onClick={(e) => {
+					              e.preventDefault();
+					              window.openPDF('24-20661_ANTONIO_PUIG_S.A/16 - Notice 24-20661/Emballage/NOTICE-DEBALLAGE.pdf');
+					            }}
 					            className='PDF-link'
 					          >
 					            <img src={'/icons/Emballage.svg'} alt={'Emballage icon'} className="folder-icon" onError={(e) => {e.target.style.display = 'none'}} />
@@ -65,9 +79,11 @@ const Page = () => {
 					
 					        <div className='CTA-notice'>
 					          <a 
-					            href={'/dossiers/24-20661_ANTONIO_PUIG_S.A/16 - Notice 24-20661/Installation/CLARINS - TIROIS SANS CAISSON - NOTICE.pdf'}
-					            target="_blank"
-					            rel="noopener noreferrer"
+					            href={'#file=' + btoa('24-20661_ANTONIO_PUIG_S.A/16 - Notice 24-20661/Installation/CLARINS - TIROIS SANS CAISSON - NOTICE.pdf')}
+					            onClick={(e) => {
+					              e.preventDefault();
+					              window.openPDF('24-20661_ANTONIO_PUIG_S.A/16 - Notice 24-20661/Installation/CLARINS - TIROIS SANS CAISSON - NOTICE.pdf');
+					            }}
 					            className='PDF-link'
 					          >
 					            <img src={'/icons/Installation.svg'} alt={'Installation icon'} className="folder-icon" onError={(e) => {e.target.style.display = 'none'}} />
@@ -77,9 +93,11 @@ const Page = () => {
 					
 					        <div className='CTA-notice'>
 					          <a 
-					            href={'/dossiers/24-20661_ANTONIO_PUIG_S.A/16 - Notice 24-20661/Transport/CLARINS - GONDOLE C1 - NOTICE (ok 240320-modifié-210112).pdf'}
-					            target="_blank"
-					            rel="noopener noreferrer"
+					            href={'#file=' + btoa('24-20661_ANTONIO_PUIG_S.A/16 - Notice 24-20661/Transport/CLARINS - GONDOLE C1 - NOTICE (ok 240320-modifié-210112).pdf')}
+					            onClick={(e) => {
+					              e.preventDefault();
+					              window.openPDF('24-20661_ANTONIO_PUIG_S.A/16 - Notice 24-20661/Transport/CLARINS - GONDOLE C1 - NOTICE (ok 240320-modifié-210112).pdf');
+					            }}
 					            className='PDF-link'
 					          >
 					            <img src={'/icons/Transport.svg'} alt={'Transport icon'} className="folder-icon" onError={(e) => {e.target.style.display = 'none'}} />

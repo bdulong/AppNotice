@@ -21,25 +21,30 @@ const genererContenu = (nomDossierFormate, nomDossierOriginal, sousDossiers) => 
   const sousDossiersHTML = sousDossiers
     .map(sd => {
       const pdfFiles = getPDFFiles(path.join(dossiersPath, nomDossierOriginal, `16 - Notice ${nomDossierOriginal.substring(0, 8)}`, sd));
-      const pdfLinks = pdfFiles.map(pdf => `
+      const pdfLinks = pdfFiles.map(pdf => {
+        const filePath = `${nomDossierOriginal}/16 - Notice ${nomDossierOriginal.substring(0, 8)}/${sd}/${pdf.fullPath}`;
+        return `
         <div className='CTA-notice'>
           <a 
-            href={'/dossiers/${nomDossierOriginal}/16 - Notice ${nomDossierOriginal.substring(0, 8)}/${sd}/${pdf.fullPath}'}
-            target="_blank"
-            rel="noopener noreferrer"
+            href={'#file=' + btoa('${filePath}')}
+            onClick={(e) => {
+              e.preventDefault();
+              window.openPDF('${filePath}');
+            }}
             className='PDF-link'
           >
             <img src={'/icons/${sd}.svg'} alt={'${sd} icon'} className="folder-icon" onError={(e) => {e.target.style.display = 'none'}} />
             <h2>{t('sousDossiers.${sd}')}</h2>
           </a>
-        </div>`).join("\n");
+        </div>`;
+      }).join("\n");
 
       return pdfLinks;
     })
     .join("\n")
     .replace(/\n/g, "\n\t\t\t\t\t");
 
-  return `import React from 'react'
+  return `import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next';
 import './dossiers_jsx-style.css';
 import '../../App.css';
@@ -48,6 +53,12 @@ import CTALanguage from '../CTALanguage/CTALanguage.jsx';
 
 const Page = () => {
     const { t } = useTranslation();
+
+    useEffect(() => {
+      window.openPDF = (filePath) => {
+        window.open('/dossiers/' + filePath, '_blank');
+      };
+    }, []);
 
     return (
         <main>
