@@ -37,20 +37,6 @@ const Page = () => {
 					
 					        <div className='CTA-notice'>
 					          <a 
-					            href={'#file=' + btoa('24-20661_ANTONIO_PUIG_S.A/16 - Notice 24-20661/Demantelement/NOTICE - 80100944 TG 23 BAR ON COUNTER  - NON LUMINEUX 001.pdf')}
-					            onClick={(e) => {
-					              e.preventDefault();
-					              window.openPDF('24-20661_ANTONIO_PUIG_S.A/16 - Notice 24-20661/Demantelement/NOTICE - 80100944 TG 23 BAR ON COUNTER  - NON LUMINEUX 001.pdf');
-					            }}
-					            className='PDF-link'
-					          >
-					            <img src={'/icons/Demantelement.svg'} alt={'Demantelement icon'} className="folder-icon" onError={(e) => {e.target.style.display = 'none'}} />
-					            <h2>{t('sousDossiers.Demantelement')}</h2>
-					          </a>
-					        </div>
-					
-					        <div className='CTA-notice'>
-					          <a 
 					            href={'#file=' + btoa('24-20661_ANTONIO_PUIG_S.A/16 - Notice 24-20661/Electricite/CLARINS - KIT ALIM - NOTICE.pdf')}
 					            onClick={(e) => {
 					              e.preventDefault();
