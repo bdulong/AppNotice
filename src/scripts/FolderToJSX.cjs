@@ -22,21 +22,19 @@ const genererContenu = (nomDossierFormate, nomDossierOriginal, sousDossiers) => 
     .map(sd => {
       const pdfFiles = getPDFFiles(path.join(dossiersPath, nomDossierOriginal, `16 - Notice ${nomDossierOriginal.substring(0, 8)}`, sd));
       const pdfLinks = pdfFiles.map(pdf => `
-        <a 
-          href={'/dossiers/${nomDossierOriginal}/16 - Notice ${nomDossierOriginal.substring(0, 8)}/${sd}/${pdf.fullPath}'}
-          target="_blank"
-          rel="noopener noreferrer"
-          className='PDF-link'
-        >
-          {t('pdfFiles.${pdf.name}')}
-        </a>`).join("\n");
+        <div className='CTA-notice'>
+          <a 
+            href={'/dossiers/${nomDossierOriginal}/16 - Notice ${nomDossierOriginal.substring(0, 8)}/${sd}/${pdf.fullPath}'}
+            target="_blank"
+            rel="noopener noreferrer"
+            className='PDF-link'
+          >
+            <img src={'/icons/${sd}.svg'} alt={'${sd} icon'} className="folder-icon" onError={(e) => {e.target.style.display = 'none'}} />
+            <h2>{t('sousDossiers.${sd}')}</h2>
+          </a>
+        </div>`).join("\n");
 
-      return `
-      <div className='CTA-notice'>
-        <h2>{t('sousDossiers.${sd}')}</h2>
-        <img src={'/icons/${sd}.svg'} alt={'${sd} icon'} className="folder-icon" onError={(e) => {e.target.style.display = 'none'}} />
-        ${pdfLinks}
-      </div>`;
+      return pdfLinks;
     })
     .join("\n")
     .replace(/\n/g, "\n\t\t\t\t\t");
