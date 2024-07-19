@@ -12,37 +12,41 @@ const formatterNomDossier = (nomDossier) => {
 };
 
 const getPDFFiles = (dir) => {
-  return fs.readdirSync(dir)
-    .filter(file => file.toLowerCase().endsWith('.pdf'))
-    .map(file => ({ name: path.parse(file).name, fullPath: file }));
+  const files = fs.readdirSync(dir)
+    .filter(file => file.toLowerCase().endsWith('.pdf'));
+  if (files.length > 0) {
+    return [{ name: path.parse(files[0]).name, fullPath: files[0] }];
+  }
+  return [];
 };
 
 const genererContenu = (nomDossierFormate, nomDossierOriginal, sousDossiers) => {
   const sousDossiersHTML = sousDossiers
-    .map(sd => {
-      const pdfFiles = getPDFFiles(path.join(dossiersPath, nomDossierOriginal, `16 - Notice ${nomDossierOriginal.substring(0, 8)}`, sd));
-      const pdfLinks = pdfFiles.map(pdf => {
-        const filePath = `${nomDossierOriginal}/16 - Notice ${nomDossierOriginal.substring(0, 8)}/${sd}/${pdf.fullPath}`;
-        return `
-        <div className='CTA-notice'>
-          <a 
-            href={'#file=' + btoa('${filePath}')}
-            onClick={(e) => {
-              e.preventDefault();
-              window.openPDF('${filePath}');
-            }}
-            className='PDF-link'
-          >
-            <img src={'/icons/${sd}.svg'} alt={'${sd} icon'} className="folder-icon" onError={(e) => {e.target.style.display = 'none'}} />
-            <h2>{t('sousDossiers.${sd}')}</h2>
-          </a>
-        </div>`;
-      }).join("\n");
-
-      return pdfLinks;
-    })
-    .join("\n")
-    .replace(/\n/g, "\n\t\t\t\t\t");
+  .map(sd => {
+    const pdfFiles = getPDFFiles(path.join(dossiersPath, nomDossierOriginal, `16 - Notice ${nomDossierOriginal.substring(0, 8)}`, sd));
+    if (pdfFiles.length > 0) {
+      const pdf = pdfFiles[0];
+      const filePath = `${nomDossierOriginal}/16 - Notice ${nomDossierOriginal.substring(0, 8)}/${sd}/${pdf.fullPath}`;
+      return `
+      <div className='CTA-notice'>
+        <a 
+          href={'#file=' + btoa('${filePath}')}
+          onClick={(e) => {
+            e.preventDefault();
+            window.openPDF('${filePath}');
+          }}
+          className='PDF-link'
+        >
+          <img src={'/icons/${sd}.svg'} alt={'${sd} icon'} className="folder-icon" onError={(e) => {e.target.style.display = 'none'}} />
+          <h2>{t('sousDossiers.${sd}')}</h2>
+        </a>
+      </div>`;
+    }
+    return '';
+  })
+  .filter(Boolean)
+  .join("\n")
+  .replace(/\n/g, "\n\t\t\t\t\t");
 
   return `import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next';
