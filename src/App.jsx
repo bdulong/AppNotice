@@ -18,6 +18,9 @@ import EawcjaZakNOexgkzgfRV from './components/dossiers_jsx/24-62114.jsx';
 import PogjWXgvYqyZAwgzfFDv from './components/dossiers_jsx/ANTONIOPUIGSA.jsx';
 import ESufVBQlfEUlyewOAeur from './components/dossiers_jsx/CHANELPARFUMSBEAUTESAS.jsx';
 import AEyUsyuJPdglBPvCZgIV from './components/dossiers_jsx/SEPHORASAS.jsx';
+import KKVZOTRvIpQZUrriHylm from './components/dossiers_jsx/TESTOK.jsx';
+import WemIrfGdBWXlkcXqhaTg from './components/dossiers_jsx/24-47755.jsx';
+import CgeDjAGvGpogTALbALAw from './components/dossiers_jsx/24-51188.jsx';
 // Fin des imports des pages générées par LinksConverter.cjs
 
 const Loading = () => <div>Chargement...</div>;
@@ -40,6 +43,9 @@ export default function App() {
 						<Route path="/EawcjaZakNOexgkzgfRV" element={<EawcjaZakNOexgkzgfRV />} />
 						<Route path="/PogjWXgvYqyZAwgzfFDv" element={<PogjWXgvYqyZAwgzfFDv />} />
 						<Route path="/ESufVBQlfEUlyewOAeur" element={<ESufVBQlfEUlyewOAeur />} />
+						<Route path="/WemIrfGdBWXlkcXqhaTg" element={<WemIrfGdBWXlkcXqhaTg />} />
+						<Route path="/CgeDjAGvGpogTALbALAw" element={<CgeDjAGvGpogTALbALAw />} />
+						<Route path="/KKVZOTRvIpQZUrriHylm" element={<KKVZOTRvIpQZUrriHylm />} />
 						<Route path="/AEyUsyuJPdglBPvCZgIV" element={<AEyUsyuJPdglBPvCZgIV />} />
                         {/* Fin des routes des pages générées par LinksConverter.cjs */}
                         <Route path="*" element={<PageErreur />} />

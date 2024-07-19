@@ -7,25 +7,15 @@ dotenv.config();
 const appFilePath = path.join(__dirname, '../App.jsx');
 const componentsDir = path.join(__dirname, '../components/dossiers_jsx');
 
-// Récupérer le nom de fichier du dossier "dossiers_jsx"
 const files = fs.readdirSync(componentsDir).filter(file => file.endsWith('.jsx'));
 
 if (files.length === 0) {
-	console.error('Aucun fichier .jsx trouvé dans le dossier dossiers_jsx.');
-	process.exit(1);
+    console.error('Aucun fichier .jsx trouvé dans le dossier dossiers_jsx.');
+    process.exit(1);
 }
 
-// Lire le contenu de App.jsx
 let appFileContent = fs.readFileSync(appFilePath, 'utf-8');
 
-// Insérer les nouvelles lignes après la 9ème
-const lines = appFileContent.split('\n');
-if (lines.length < 9) {
-	console.error('Le fichier App.jsx ne contient pas assez de lignes.');
-	process.exit(1);
-}
-
-// Clé pour la génération des noms
 const key = process.env.REACT_APP_KEY;
 
 if (!key) {
@@ -35,44 +25,42 @@ if (!key) {
 
 // Générer les nouvelles lignes d'import et de Route
 const newImportsAndRoutes = files.map(file => {
-	const randomName = generateRandomName(file.substring(0, 8), key);
-	const importLine = `import ${randomName} from './components/dossiers_jsx/${file}';`;
-	const routeLine = `\t\t\t\t\t\t<Route path="/${randomName}" element={<${randomName} />} />`;
-	return { importLine, routeLine };
+    const randomName = generateRandomName(file.substring(0, 8), key);
+    const importLine = `import ${randomName} from './components/dossiers_jsx/${file}';`;
+    const routeLine = `\t\t\t\t\t\t<Route path="/${randomName}" element={<${randomName} />} />`;
+    return { importLine, routeLine, randomName };
 });
 
-// Vérifier si les lignes d'import existent déjà et ajouter seulement les nouvelles
-const existingImports = new Set(lines.filter(line => line.startsWith('import ')));
-const uniqueImports = newImportsAndRoutes.filter(({ importLine }) => !existingImports.has(importLine));
+// Vérifier si les lignes d'import et de Route existent déjà
+const existingImports = new Set(appFileContent.match(/import .+ from '.\/components\/dossiers_jsx\/.+\.jsx';/g) || []);
+const existingRoutes = new Set(appFileContent.match(/<Route path="\/.+" element={<.+ \/>} \/>/g) || []);
 
-// Ajouter les nouvelles lignes après la 9ème ligne
-if (uniqueImports.length > 0) {
-	let landingRouteIndex = -1;
+const uniqueImportsAndRoutes = newImportsAndRoutes.filter(({ importLine, routeLine, randomName }) => 
+    !existingImports.has(importLine) && !existingRoutes.has(routeLine) && !appFileContent.includes(randomName)
+);
 
-	for (let i = 0; i < lines.length; i++) {
-		if (lines[i].includes('{/* Routes des pages générées par LinksConverter.cjs */}')) {
-			landingRouteIndex = i;
-			break;
-		}
-	}
+if (uniqueImportsAndRoutes.length > 0) {
+    const lines = appFileContent.split('\n');
+    let importInsertIndex = lines.findIndex(line => line.includes('// Fin des imports des pages générées par LinksConverter.cjs'));
+    let routeInsertIndex = lines.findIndex(line => line.includes('{/* Fin des routes des pages générées par LinksConverter.cjs */}'));
 
-	if (landingRouteIndex === -1) {
-		console.error('La ligne {/* Routes des pages générées par LinksConverter.cjs */} n\'a pas été trouvée dans le fichier App.jsx.');
-		process.exit(1);
-	}
+    if (importInsertIndex === -1 || routeInsertIndex === -1) {
+        console.error('Les marqueurs de début ou de fin n\'ont pas été trouvés dans le fichier App.jsx.');
+        process.exit(1);
+    }
 
-	// Insérer les nouvelles lignes après la ligne {/* Routes des pages générées par LinksConverter.cjs */}
-	lines.splice(landingRouteIndex + 1, 0, ...uniqueImports.map(({ routeLine }) => routeLine));
+    // Insérer les nouvelles lignes d'import
+    lines.splice(importInsertIndex, 0, ...uniqueImportsAndRoutes.map(({ importLine }) => importLine));
 
-	// Insérer les nouvelles lignes d'import après la 9ème ligne
-	lines.splice(9, 0, ...uniqueImports.map(({ importLine }) => importLine));
+    // Insérer les nouvelles lignes de Route
+    lines.splice(routeInsertIndex, 0, ...uniqueImportsAndRoutes.map(({ routeLine }) => routeLine));
 
-	// Réécrire le fichier App.jsx avec les nouvelles lignes
-	appFileContent = lines.join('\n');
-	fs.writeFileSync(appFilePath, appFileContent, 'utf-8');
+    // Réécrire le fichier App.jsx avec les nouvelles lignes
+    appFileContent = lines.join('\n');
+    fs.writeFileSync(appFilePath, appFileContent, 'utf-8');
 
-	console.log(`Lignes d'import ajoutées : \n${uniqueImports.map(({ importLine }) => importLine).join('\n')}`);
-	console.log(`Lignes <Route> ajoutées : \n${uniqueImports.map(({ routeLine }) => routeLine).join('\n')}`);
+    console.log(`Nouvelles lignes d'import ajoutées : \n${uniqueImportsAndRoutes.map(({ importLine }) => importLine).join('\n')}`);
+    console.log(`Nouvelles lignes <Route> ajoutées : \n${uniqueImportsAndRoutes.map(({ routeLine }) => routeLine).join('\n')}`);
 } else {
-	console.log('Aucune nouvelle ligne à ajouter.');
+    console.log('Aucune nouvelle ligne à ajouter.');
 }
