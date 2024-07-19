@@ -1,14 +1,13 @@
 
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 import './dossiers_jsx-style.css';
 import '../../App.css';
 import Header from '../Header/header.jsx';
+import CTALanguage from '../CTALanguage/CTALanguage.jsx';
 
 const CHANELPARFUMSBEAUTESASPage = () => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
 
   return (
     <main>
@@ -17,48 +16,55 @@ const CHANELPARFUMSBEAUTESASPage = () => {
         <h1>CHANEL PARFUMS BEAUTE SAS</h1>
         <div className='CTA-container'>
           
-    <div className="CTA-notice">
-      <a 
-        href={'/WxjHhzfbMqsJoxQULLFx'}
-        onClick={(e) => {
-          e.preventDefault();
-          navigate('/WxjHhzfbMqsJoxQULLFx');
-        }}
-        className="dossier-link"
-      >
-        <h2>{t('dossiers.24-20705')}</h2>
-      </a>
-    </div>
+    <a 
+      href={'/WxjHhzfbMqsJoxQULLFx'}
+      target="_blank"
+      rel="noopener noreferrer"
+      onClick={(e) => {
+        e.preventDefault();
+        window.open('/WxjHhzfbMqsJoxQULLFx', '_blank', 'noopener,noreferrer');
+      }}
+      className="dossier-link"
+    >
+      <div className="CTA-notice">
+        <h2>{t('dossiers')} 24-20705</h2>
+      </div>
+    </a>
   
 
-    <div className="CTA-notice">
-      <a 
-        href={'/FDvukSjnCyhIQrXQPsZn'}
-        onClick={(e) => {
-          e.preventDefault();
-          navigate('/FDvukSjnCyhIQrXQPsZn');
-        }}
-        className="dossier-link"
-      >
-        <h2>{t('dossiers.24-44155')}</h2>
-      </a>
-    </div>
+    <a 
+      href={'/FDvukSjnCyhIQrXQPsZn'}
+      target="_blank"
+      rel="noopener noreferrer"
+      onClick={(e) => {
+        e.preventDefault();
+        window.open('/FDvukSjnCyhIQrXQPsZn', '_blank', 'noopener,noreferrer');
+      }}
+      className="dossier-link"
+    >
+      <div className="CTA-notice">
+        <h2>{t('dossiers')} 24-44155</h2>
+      </div>
+    </a>
   
 
-    <div className="CTA-notice">
-      <a 
-        href={'/OafjYJYtuiBpZEAWGbih'}
-        onClick={(e) => {
-          e.preventDefault();
-          navigate('/OafjYJYtuiBpZEAWGbih');
-        }}
-        className="dossier-link"
-      >
-        <h2>{t('dossiers.24-54588')}</h2>
-      </a>
-    </div>
+    <a 
+      href={'/OafjYJYtuiBpZEAWGbih'}
+      target="_blank"
+      rel="noopener noreferrer"
+      onClick={(e) => {
+        e.preventDefault();
+        window.open('/OafjYJYtuiBpZEAWGbih', '_blank', 'noopener,noreferrer');
+      }}
+      className="dossier-link"
+    >
+      <div className="CTA-notice">
+        <h2>{t('dossiers')} 24-54588</h2>
+      </div>
+    </a>
   
         </div>
+        <CTALanguage />
       </div>
     </main>
   );

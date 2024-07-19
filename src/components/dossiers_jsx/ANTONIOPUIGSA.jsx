@@ -1,14 +1,13 @@
 
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 import './dossiers_jsx-style.css';
 import '../../App.css';
 import Header from '../Header/header.jsx';
+import CTALanguage from '../CTALanguage/CTALanguage.jsx';
 
 const ANTONIOPUIGSAPage = () => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
 
   return (
     <main>
@@ -17,34 +16,39 @@ const ANTONIOPUIGSAPage = () => {
         <h1>ANTONIO PUIG S A</h1>
         <div className='CTA-container'>
           
-    <div className="CTA-notice">
-      <a 
-        href={'/YRSmdDeeZOEXRpqdbaKL'}
-        onClick={(e) => {
-          e.preventDefault();
-          navigate('/YRSmdDeeZOEXRpqdbaKL');
-        }}
-        className="dossier-link"
-      >
-        <h2>{t('dossiers.24-20661')}</h2>
-      </a>
-    </div>
+    <a 
+      href={'/YRSmdDeeZOEXRpqdbaKL'}
+      target="_blank"
+      rel="noopener noreferrer"
+      onClick={(e) => {
+        e.preventDefault();
+        window.open('/YRSmdDeeZOEXRpqdbaKL', '_blank', 'noopener,noreferrer');
+      }}
+      className="dossier-link"
+    >
+      <div className="CTA-notice">
+        <h2>{t('dossiers')} 24-20661</h2>
+      </div>
+    </a>
   
 
-    <div className="CTA-notice">
-      <a 
-        href={'/EawcjaZakNOexgkzgfRV'}
-        onClick={(e) => {
-          e.preventDefault();
-          navigate('/EawcjaZakNOexgkzgfRV');
-        }}
-        className="dossier-link"
-      >
-        <h2>{t('dossiers.24-62114')}</h2>
-      </a>
-    </div>
+    <a 
+      href={'/EawcjaZakNOexgkzgfRV'}
+      target="_blank"
+      rel="noopener noreferrer"
+      onClick={(e) => {
+        e.preventDefault();
+        window.open('/EawcjaZakNOexgkzgfRV', '_blank', 'noopener,noreferrer');
+      }}
+      className="dossier-link"
+    >
+      <div className="CTA-notice">
+        <h2>{t('dossiers')} 24-62114</h2>
+      </div>
+    </a>
   
         </div>
+        <CTALanguage />
       </div>
     </main>
   );

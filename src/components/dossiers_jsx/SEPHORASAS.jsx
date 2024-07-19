@@ -1,14 +1,13 @@
 
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 import './dossiers_jsx-style.css';
 import '../../App.css';
 import Header from '../Header/header.jsx';
+import CTALanguage from '../CTALanguage/CTALanguage.jsx';
 
 const SEPHORASASPage = () => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
 
   return (
     <main>
@@ -17,48 +16,55 @@ const SEPHORASASPage = () => {
         <h1>SEPHORA SAS</h1>
         <div className='CTA-container'>
           
-    <div className="CTA-notice">
-      <a 
-        href={'/LFRuGXpnnlShCOzyFXOh'}
-        onClick={(e) => {
-          e.preventDefault();
-          navigate('/LFRuGXpnnlShCOzyFXOh');
-        }}
-        className="dossier-link"
-      >
-        <h2>{t('dossiers.24-14800')}</h2>
-      </a>
-    </div>
+    <a 
+      href={'/LFRuGXpnnlShCOzyFXOh'}
+      target="_blank"
+      rel="noopener noreferrer"
+      onClick={(e) => {
+        e.preventDefault();
+        window.open('/LFRuGXpnnlShCOzyFXOh', '_blank', 'noopener,noreferrer');
+      }}
+      className="dossier-link"
+    >
+      <div className="CTA-notice">
+        <h2>{t('dossiers')} 24-14800</h2>
+      </div>
+    </a>
   
 
-    <div className="CTA-notice">
-      <a 
-        href={'/ZJHAmNjqZGCZVKXXFwpd'}
-        onClick={(e) => {
-          e.preventDefault();
-          navigate('/ZJHAmNjqZGCZVKXXFwpd');
-        }}
-        className="dossier-link"
-      >
-        <h2>{t('dossiers.24-17111')}</h2>
-      </a>
-    </div>
+    <a 
+      href={'/ZJHAmNjqZGCZVKXXFwpd'}
+      target="_blank"
+      rel="noopener noreferrer"
+      onClick={(e) => {
+        e.preventDefault();
+        window.open('/ZJHAmNjqZGCZVKXXFwpd', '_blank', 'noopener,noreferrer');
+      }}
+      className="dossier-link"
+    >
+      <div className="CTA-notice">
+        <h2>{t('dossiers')} 24-17111</h2>
+      </div>
+    </a>
   
 
-    <div className="CTA-notice">
-      <a 
-        href={'/FAgCgTmKRCACTygESMnO'}
-        onClick={(e) => {
-          e.preventDefault();
-          navigate('/FAgCgTmKRCACTygESMnO');
-        }}
-        className="dossier-link"
-      >
-        <h2>{t('dossiers.24-20610')}</h2>
-      </a>
-    </div>
+    <a 
+      href={'/FAgCgTmKRCACTygESMnO'}
+      target="_blank"
+      rel="noopener noreferrer"
+      onClick={(e) => {
+        e.preventDefault();
+        window.open('/FAgCgTmKRCACTygESMnO', '_blank', 'noopener,noreferrer');
+      }}
+      className="dossier-link"
+    >
+      <div className="CTA-notice">
+        <h2>{t('dossiers')} 24-20610</h2>
+      </div>
+    </a>
   
         </div>
+        <CTALanguage />
       </div>
     </main>
   );

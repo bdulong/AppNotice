@@ -22,18 +22,20 @@ const generateJSXContent = (commonName, dossierNumbers) => {
   const links = dossierNumbers.map(num => {
     const encryptedNum = generateRandomName(num, process.env.REACT_APP_KEY);
     return `
-    <div className="CTA-notice">
-      <a 
-        href={'/${encryptedNum}'}
-        onClick={(e) => {
-          e.preventDefault();
-          navigate('/${encryptedNum}');
-        }}
-        className="dossier-link"
-      >
-        <h2>{t('dossiers.${num}')}</h2>
-      </a>
-    </div>
+    <a 
+      href={'/${encryptedNum}'}
+      target="_blank"
+      rel="noopener noreferrer"
+      onClick={(e) => {
+        e.preventDefault();
+        window.open('/${encryptedNum}', '_blank', 'noopener,noreferrer');
+      }}
+      className="dossier-link"
+    >
+      <div className="CTA-notice">
+        <h2>{t('dossiers')} ${num}</h2>
+      </div>
+    </a>
   `;
   }).join('\n');
 
@@ -42,14 +44,13 @@ const generateJSXContent = (commonName, dossierNumbers) => {
   return `
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 import './dossiers_jsx-style.css';
 import '../../App.css';
 import Header from '../Header/header.jsx';
+import CTALanguage from '../CTALanguage/CTALanguage.jsx';
 
 const ${componentName}Page = () => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
 
   return (
     <main>
@@ -59,6 +60,7 @@ const ${componentName}Page = () => {
         <div className='CTA-container'>
           ${links}
         </div>
+        <CTALanguage />
       </div>
     </main>
   );
