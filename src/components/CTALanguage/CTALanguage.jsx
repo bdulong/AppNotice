@@ -21,7 +21,7 @@ export default function CTALanguage() {
     setCurrentLanguage(lang);
     setIsDropdownVisible(false);
   };
-
+  
   const languageData = {
     fr: {
       text: "Français",
@@ -53,8 +53,8 @@ export default function CTALanguage() {
     <div className="CTA-language__container">
       <button className="CTA-language__menu" onClick={toggleDropdown}>
         <div className="language__text-flag">
-          {languageData[currentLanguage].flag}
-          {languageData[currentLanguage].text}
+        {languageData[currentLanguage]?.flag}
+        {languageData[currentLanguage]?.text}
         </div>
         <svg
           className={`chevron ${isDropdownVisible ? "chevron-rotate" : ""}`}
