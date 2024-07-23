@@ -112,6 +112,25 @@ const supprimerFichierJSON = () => {
   }
 };
 
+const copyDirectory = (source, destination) => {
+    if (!fs.existsSync(destination)) {
+        fs.mkdirSync(destination, { recursive: true });
+    }
+
+    const files = fs.readdirSync(source);
+
+    for (const file of files) {
+        const currentSource = path.join(source, file);
+        const currentDestination = path.join(destination, file);
+
+        if (fs.lstatSync(currentSource).isDirectory()) {
+            copyDirectory(currentSource, currentDestination);
+        } else {
+            fs.copyFileSync(currentSource, currentDestination);
+        }
+    }
+};
+
 // Fonction principale
 const main = () => {
     console.log("Début du traitement...");
@@ -140,6 +159,14 @@ const main = () => {
     console.log("Traitement terminé.");
     
     supprimerFichierJSON();
+
+    // Copier le répertoire dossiers vers public
+    const srcDossiersPath = path.join(__dirname, "..", "dossiers");
+    const publicDossiersPath = path.join(__dirname, "..", "..", "public", "dossiers");
+    
+    console.log("Copie du répertoire dossiers vers public...");
+    copyDirectory(srcDossiersPath, publicDossiersPath);
+    console.log("Copie terminée.");
 };
 
 // Exécuter le script

@@ -18,7 +18,7 @@ const Page = () => {
       <main>
           <Header />
           <div className='content'>
-              <h1>ANTONIO</h1>
+              <h1>OWD INVICTUS 2025</h1>
               <div className='CTA-container'>
                   
         <div className='CTA-notice'>
@@ -34,6 +34,16 @@ const Page = () => {
         <div className='CTA-notice'>
             <button 
                 onClick={() => window.openPDF('/dossiers/24-20661_ANTONIO_PUIG_S.A/16 - Notice 24-20661/24-20661_NOTICE_TPT_V01.pdf')}
+                className='PDF-link'
+            >
+                <img src={'/icons/TPT.svg'} alt={'TPT icon'} className="folder-icon" onError={(e) => {e.target.style.display = 'none'}} />
+                <h2>{t('sousDossiers.TPT')}</h2>
+            </button>
+        </div>
+
+        <div className='CTA-notice'>
+            <button 
+                onClick={() => window.openPDF('/dossiers/24-20661_ANTONIO_PUIG_S.A/16 - Notice 24-20661/24-20661_NOTICE_TPT_V01.PDF')}
                 className='PDF-link'
             >
                 <img src={'/icons/TPT.svg'} alt={'TPT icon'} className="folder-icon" onError={(e) => {e.target.style.display = 'none'}} />
