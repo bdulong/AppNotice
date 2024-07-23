@@ -4,7 +4,6 @@ const path = require("path");
 
 // Chemins définis dans le fichier .env
 const jsonFilePath = process.env.JSON_FILE_PATH;
-const pdfBasePath = process.env.PDF_BASE_PATH;
 
 // Chemins des dossiers
 const dossiersPath = path.join(__dirname, "..", "dossiers");
