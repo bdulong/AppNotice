@@ -1,54 +1,76 @@
+require('dotenv').config();
 const fs = require("fs");
 const path = require("path");
 
+// Chemins définis dans le fichier .env
+const jsonFilePath = process.env.JSON_FILE_PATH;
+const pdfBasePath = process.env.PDF_BASE_PATH;
+
+// Chemins des dossiers
 const dossiersPath = path.join(__dirname, "..", "dossiers");
 const dossiersjsxPath = path.join(__dirname, "..", "components", "dossiers_jsx");
 
+// Lire le fichier JSON
+const jsonData = JSON.parse(fs.readFileSync(jsonFilePath, 'utf8'));
+
+// Fonction pour trouver le dossier correspondant
+const findMatchingFolder = (basePath, folderPrefix) => {
+    const folders = fs.readdirSync(basePath);
+    return folders.find(folder => folder.startsWith(folderPrefix));
+};
+
+// Fonction pour formatter le nom du dossier
 const formatterNomDossier = (nomDossier) => {
-  let formateNom = nomDossier.replace(/\d+/g, "");
-  formateNom = formateNom.replace(/-/g, "");
-  formateNom = formateNom.replace(/_/g, " ");
-  return formateNom.trim();
+    return nomDossier.replace(/\d+/g, "").replace(/-/g, "").replace(/_/g, " ").trim();
 };
 
-const getPDFFiles = (dir) => {
-  const files = fs.readdirSync(dir)
-    .filter(file => file.toLowerCase().endsWith('.pdf'));
-  if (files.length > 0) {
-    return [{ name: path.parse(files[0]).name, fullPath: files[0] }];
-  }
-  return [];
+// Fonction pour obtenir le type de notice
+const getNoticeType = (fileName) => {
+    if (fileName.includes('TPT')) return 'TPT';
+    if (fileName.includes('EMB')) return 'EMB';
+    if (fileName.includes('ELC')) return 'ELC';
+    if (fileName.includes('INS')) return 'INS';
+    if (fileName.includes('DMT')) return 'DMT';
+    return 'AUTRE';
 };
 
-const genererContenu = (nomDossierFormate, nomDossierOriginal, sousDossiers) => {
-  const sousDossiersHTML = sousDossiers
-  .map(sd => {
-    const pdfFiles = getPDFFiles(path.join(dossiersPath, nomDossierOriginal, `16 - Notice ${nomDossierOriginal.substring(0, 8)}`, sd));
-    if (pdfFiles.length > 0) {
-      const pdf = pdfFiles[0];
-      const filePath = `${nomDossierOriginal}/16 - Notice ${nomDossierOriginal.substring(0, 8)}/${sd}/${pdf.fullPath}`;
-      return `
-      <div className='CTA-notice'>
-        <a 
-          href={'#file=' + btoa('${filePath}')}
-          onClick={(e) => {
-            e.preventDefault();
-            window.openPDF('${filePath}');
-          }}
-          className='PDF-link'
-        >
-          <img src={'/icons/${sd}.svg'} alt={'${sd} icon'} className="folder-icon" onError={(e) => {e.target.style.display = 'none'}} />
-          <h2>{t('sousDossiers.${sd}')}</h2>
-        </a>
-      </div>`;
+const extraireLiensExistants = (cheminFichierJSX) => {
+    if (!fs.existsSync(cheminFichierJSX)) {
+        return [];
     }
-    return '';
-  })
-  .filter(Boolean)
-  .join("\n")
-  .replace(/\n/g, "\n\t\t\t\t\t");
+    const contenu = fs.readFileSync(cheminFichierJSX, 'utf8');
+    const regex = /window\.openPDF\('([^']+)'\)/g;
+    const liens = [];
+    let match;
+    while ((match = regex.exec(contenu)) !== null) {
+        liens.push(match[1]);
+    }
+    return liens;
+};
 
-  return `import React, { useEffect } from 'react'
+// Fonction pour générer le contenu JSX
+const genererContenu = (dossierInfo, fullDossierName, liensExistants) => {
+    const { dossier, marque, libelle, notices } = dossierInfo;
+    const nomDossierFormate = formatterNomDossier(dossier);
+
+    const tousLesLiens = [...new Set([...liensExistants, ...notices.map(notice => `/dossiers/${fullDossierName}/16 - Notice ${dossier.substring(0, 8)}/${notice}`)])];
+
+    const noticesHTML = tousLesLiens.map(lien => {
+        const notice = path.basename(lien);
+        const type = getNoticeType(notice);
+        return `
+        <div className='CTA-notice'>
+            <button 
+                onClick={() => window.openPDF('${lien}')}
+                className='PDF-link'
+            >
+                <img src={'/icons/${type}.svg'} alt={'${type} icon'} className="folder-icon" onError={(e) => {e.target.style.display = 'none'}} />
+                <h2>{t('sousDossiers.${type}')}</h2>
+            </button>
+        </div>`;
+    }).join("\n");
+
+    return `import React from 'react'
 import { useTranslation } from 'react-i18next';
 import './dossiers_jsx-style.css';
 import '../../App.css';
@@ -56,99 +78,59 @@ import Header from '../Header/header.jsx';
 import CTALanguage from '../CTALanguage/CTALanguage.jsx';
 
 const Page = () => {
-    const { t } = useTranslation();
+  const { t } = useTranslation();
 
-    useEffect(() => {
+  React.useEffect(() => {
       window.openPDF = (filePath) => {
-        window.open('/dossiers/' + filePath, '_blank');
+          window.open(filePath, '_blank');
       };
-    }, []);
+  }, []);
 
-    return (
-        <main>
-            <Header />
-            <div className='content'>
-                <h1>${nomDossierFormate.replace(/^\d+-/, '').replace(/_/g, ' ')}</h1>
-                <div className='CTA-container'>
-                    ${sousDossiersHTML}
-                </div>
-                <CTALanguage />
-            </div>
-        </main>
-    );
+  return (
+      <main>
+          <Header />
+          <div className='content'>
+              <h1>${marque}</h1>
+              <div className='CTA-container'>
+                  ${noticesHTML}
+              </div>
+              <CTALanguage />
+          </div>
+      </main>
+  );
 };
 
 export default Page;
 `;
 };
 
-fs.readdir(dossiersjsxPath, (err, fichiersJSXExistants) => {
-  if (err) {
-    console.error('Erreur lors de la lecture du dossier "dossiers_jsx":', err);
-    return;
-  }
+// Fonction principale
+const main = () => {
+    console.log("Début du traitement...");
 
-  const fichiersExistantSet = new Set(fichiersJSXExistants);
+    for (const dossierInfo of jsonData.create) {
+        const { dossier, notices } = dossierInfo;
+        const dossierPrefix = dossier.substring(0, 8);
+        console.log(`Traitement du dossier: ${dossier}`);
 
-  fs.readdir(dossiersPath, (err, dossiers) => {
-    if (err) {
-      console.error('Erreur lors de la lecture du dossier "dossiers":', err);
-      return;
+        const fullDossierName = findMatchingFolder(dossiersPath, dossierPrefix);
+        if (!fullDossierName) {
+            console.error(`Dossier non trouvé pour le préfixe: ${dossierPrefix}`);
+            continue;
+        }
+
+        // Vérifier si le fichier JSX existe déjà et extraire les liens existants
+        const cheminFichierJSX = path.join(dossiersjsxPath, `${dossier}.jsx`);
+        const liensExistants = extraireLiensExistants(cheminFichierJSX);
+
+        // Générer le contenu JSX avec les liens existants et les nouveaux
+        const contenuJSX = genererContenu(dossierInfo, fullDossierName, liensExistants);
+        fs.writeFileSync(cheminFichierJSX, contenuJSX);
+        console.log(`Fichier JSX mis à jour: ${dossier}.jsx`);
     }
 
-    dossiers.forEach((dossierOriginal) => {
-      if (!/^\d{2}/.test(dossierOriginal)) {
-        console.log(`Le dossier "${dossierOriginal}" ne correspond pas au format attendu.`);
-        return;
-      }
+    console.log("Traitement terminé.");
+};
 
-      const nomFichierJSX = dossierOriginal.substring(0, 8) + ".jsx";
-      const cheminFichierJSX = path.join(dossiersjsxPath, nomFichierJSX);
-
-      if (fichiersExistantSet.has(nomFichierJSX)) {
-        console.log(`Le fichier ${nomFichierJSX} existe déjà.`);
-      } else {
-        const dossierPath = path.join(dossiersPath, dossierOriginal);
-
-        fs.readdir(dossierPath, (err, contenuDossier) => {
-          if (err) {
-            console.error(`Erreur lors de la lecture du dossier "${dossierPath}":`, err);
-            return;
-          }
-
-          const dossier16 = contenuDossier.find(item => item.startsWith('16'));
-          
-          if (!dossier16) {
-            console.log(`Aucun dossier commençant par "16" trouvé dans "${dossierOriginal}".`);
-            return;
-          }
-
-          const chemin16 = path.join(dossierPath, dossier16);
-
-          fs.readdir(chemin16, (err, sousDossiers) => {
-            if (err) {
-              console.error(`Erreur lors de la lecture du dossier "${chemin16}":`, err);
-              return;
-            }
-
-            const nomDossierFormate = formatterNomDossier(dossierOriginal);
-            const contenu = genererContenu(nomDossierFormate, dossierOriginal, sousDossiers);
-
-            if (typeof contenu !== 'string') {
-              console.error(`Erreur: genererContenu a retourné ${typeof contenu} au lieu d'une chaîne de caractères.`);
-              return;
-            }
-
-            fs.writeFile(cheminFichierJSX, contenu, (err) => {
-              if (err) {
-                console.error(`Erreur lors de la création du fichier ${nomFichierJSX}:`, err);
-              } else {
-                console.log(`Fichier ${nomFichierJSX} créé avec succès.`);
-              }
-            });
-          });
-        });
-      }
-    });
-  });
-});
+// Exécuter le script
+main();

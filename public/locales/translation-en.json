@@ -1,10 +1,10 @@
 {
   "sousDossiers": {
-    "Demantelement": "Dismantling",
-    "Electricite": "Electricity",
-    "Emballage": "Packaging",
-    "Installation": "Installation",
-    "Transport": "Transport"
+    "DMT": "Dismantling",
+    "ELC": "Electricity",
+    "EMB": "Packaging",
+    "INS": "Installation",
+    "TPT": "Transport"
   },
   "Bienvenue": "Welcome!",
   "Cette page n&apos;existe pas": "This page does not exist",

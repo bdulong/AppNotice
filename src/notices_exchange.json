@@ -1,20 +1,20 @@
 {
     "create":[
        {
-          "dossier":"24-20705",
-          "marque":"CHANEL",
+          "dossier":"24-14800",
+          "marque":"SEPHORA",
           "libelle":"Reedition module miroir",
           "notices":[
-             "24-20705_NOTICE_TPT_V01.PDF",
-             "24-20705_NOTICE_EMB_V01.PDF"
+             "24-14800_NOTICE_TPT_V01.pdf",
+             "24-14800_NOTICE_EMB_V01.pdf"
           ]
        },
        {
           "dossier":"24-20661",
-          "marque":"OWD INVICTUS 2025",
-          "libelle":"PACO RABANNE",
+          "marque":"ANTONIO",
+          "libelle":"OWD INVICTUS 2025",
           "notices":[
-             "24-20661_NOTICE_TPT_V01.PDF"
+             "24-20661_NOTICE_TPT_V01.pdf"
           ]
        }
     ]

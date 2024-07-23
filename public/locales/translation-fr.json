@@ -1,10 +1,10 @@
 {
   "sousDossiers": {
-    "Demantelement": "Démantèlement",
-    "Electricite": "Électricité",
-    "Emballage": "Emballage",
-    "Installation": "Installation",
-    "Transport": "Transport"
+    "DMT": "Démantèlement",
+    "ELC": "Électricité",
+    "EMB": "Emballage",
+    "INS": "Installation",
+    "TPT": "Transport"
   },
   "Bienvenue": "Bienvenue !",
   "Cette page n&apos;existe pas": "Cette page n'existe pas",
