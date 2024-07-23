@@ -8,9 +8,6 @@ import Landing from './components/Landing/landing.jsx';
 import PageErreur from './components/PageErreur/PageErreur.jsx';
 // Import des pages générées par LinksConverter.cjs :
 import PogjWXgvYqyZAwgzfFDv from './components/dossiers_jsx/ANTONIOPUIGSA.jsx';
-import ESufVBQlfEUlyewOAeur from './components/dossiers_jsx/CHANELPARFUMSBEAUTESAS.jsx';
-import AEyUsyuJPdglBPvCZgIV from './components/dossiers_jsx/SEPHORASAS.jsx';
-import KKVZOTRvIpQZUrriHylm from './components/dossiers_jsx/TESTOK.jsx';
 import LFRuGXpnnlShCOzyFXOh from './components/dossiers_jsx/24-14800.jsx';
 import YRSmdDeeZOEXRpqdbaKL from './components/dossiers_jsx/24-20661.jsx';
 // Fin des imports des pages générées par LinksConverter.cjs
@@ -26,11 +23,8 @@ export default function App() {
                         <Route path="/" element={<Landing />} />
                         {/* Routes des pages générées par LinksConverter.cjs */}
 						<Route path="/PogjWXgvYqyZAwgzfFDv" element={<PogjWXgvYqyZAwgzfFDv />} />
-						<Route path="/ESufVBQlfEUlyewOAeur" element={<ESufVBQlfEUlyewOAeur />} />
 						<Route path="/LFRuGXpnnlShCOzyFXOh" element={<LFRuGXpnnlShCOzyFXOh />} />
 						<Route path="/YRSmdDeeZOEXRpqdbaKL" element={<YRSmdDeeZOEXRpqdbaKL />} />
-						<Route path="/KKVZOTRvIpQZUrriHylm" element={<KKVZOTRvIpQZUrriHylm />} />
-						<Route path="/AEyUsyuJPdglBPvCZgIV" element={<AEyUsyuJPdglBPvCZgIV />} />
                         {/* Fin des routes des pages générées par LinksConverter.cjs */}
                         <Route path="*" element={<PageErreur />} />
                     </Routes>

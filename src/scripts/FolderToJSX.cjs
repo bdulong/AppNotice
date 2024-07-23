@@ -103,6 +103,15 @@ export default Page;
 `;
 };
 
+const supprimerFichierJSON = () => {
+  try {
+      fs.unlinkSync(jsonFilePath);
+      console.log(`Le fichier JSON ${jsonFilePath} a été supprimé avec succès.`);
+  } catch (error) {
+      console.error(`Erreur lors de la suppression du fichier JSON ${jsonFilePath}:`, error);
+  }
+};
+
 // Fonction principale
 const main = () => {
     console.log("Début du traitement...");
@@ -129,6 +138,8 @@ const main = () => {
     }
 
     console.log("Traitement terminé.");
+    
+    supprimerFichierJSON();
 };
 
 // Exécuter le script
