@@ -4,11 +4,11 @@ const path = require('path');
 const generateRandomName = require('./RandomName.cjs');
 
 // Indique où trouver App.jsx (fichier de routage de l'application)
-const appFilePath = path.join(__dirname, '../App.jsx');
+const appFilePath = process.env.APP_FILE_PATH;
 
 // Indique le dossier qui contient les pages JSX à répertorier 
 // dans le routage de App.jsx
-const componentsDir = path.join(__dirname, '../components/dossiers_jsx');
+const componentsDir = process.env.COMPONENTS_DIR;
 
 const files = fs.readdirSync(componentsDir).filter(file => file.endsWith('.jsx'));
 

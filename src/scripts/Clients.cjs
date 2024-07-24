@@ -6,11 +6,11 @@ const generateRandomName = require('./RandomName.cjs');
 // Chemin vers "dossiers" (contient les fichiers et l'arborescence 
 // de l'application c'est le dossier vers lequel on IMPORTE via l'interface
 // les fichiers et dossier d'Esperanto)
-const dossiersPath = path.join(__dirname, '..', 'dossiers');
+const dossiersPath = process.env.DOSSIERS_PATH;
 
 // Utilisé par Clients.cjs pour ranger les fichiers JSX  
 // des répertoires clients
-const outputPath = path.join(__dirname, '..', 'components', 'dossiers_jsx');
+const outputPath = process.env.DOSSIERS_PATH_JSX;
 
 // Fonction pour formater le nom du dossier
 const formatDossierName = (name) => {

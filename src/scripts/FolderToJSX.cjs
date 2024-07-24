@@ -8,11 +8,11 @@ const jsonFilePath = process.env.JSON_FILE_PATH;
 // Chemin vers "dossiers" (contient les fichiers et l'arborescence 
 // de l'application c'est le dossier vers lequel on IMPORTE via l'interface
 // les fichiers et dossier d'Esperanto)
-const dossiersPath = path.join(__dirname, "..", "dossiers");
+const dossiersPath = process.env.DOSSIERS_PATH;
 
 // Chemin pour ranger les fichiers JSX (page numéro de dossier) 
 // généré par FolderTOJSX.cjs
-const dossiersjsxPath = path.join(__dirname, "..", "components", "dossiers_jsx");
+const dossiersjsxPath = process.env.DOSSIERS_PATH_JSX;
 
 // Lire le fichier JSON
 const jsonData = JSON.parse(fs.readFileSync(jsonFilePath, 'utf8'));
@@ -55,7 +55,6 @@ const extraireLiensExistants = (cheminFichierJSX) => {
 // Fonction pour générer le contenu JSX
 const genererContenu = (dossierInfo, fullDossierName, liensExistants, noticesToDelete) => {
     const { dossier, marque, libelle, notices } = dossierInfo;
-    // Vérifier utilité de cette ligne
     const nomDossierFormate = formatterNomDossier(dossier);
 
     const tousLesLiens = [...new Set([...liensExistants, ...notices.map(notice => `/dossiers/${fullDossierName}/16 - Notice ${dossier.substring(0, 8)}/${notice}`)])];
