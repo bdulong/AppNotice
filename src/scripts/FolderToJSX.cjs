@@ -158,7 +158,7 @@ const main = () => {
 
     console.log("Traitement terminé.");
     
-    supprimerFichierJSON();
+    // supprimerFichierJSON();
 
     // Copier le répertoire dossiers vers public
     const srcDossiersPath = path.join(__dirname, "..", "dossiers");
