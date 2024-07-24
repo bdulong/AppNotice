@@ -1,10 +1,13 @@
+require('dotenv').config();
 const fs = require('fs');
 const path = require('path');
 const generateRandomName = require('./RandomName.cjs');
-const dotenv = require('dotenv');
-dotenv.config();
 
+// Indique où trouver App.jsx (fichier de routage de l'application)
 const appFilePath = path.join(__dirname, '../App.jsx');
+
+// Indique le dossier qui contient les pages JSX à répertorier 
+// dans le routage de App.jsx
 const componentsDir = path.join(__dirname, '../components/dossiers_jsx');
 
 const files = fs.readdirSync(componentsDir).filter(file => file.endsWith('.jsx'));

@@ -5,8 +5,13 @@ const path = require("path");
 // Chemins définis dans le fichier .env
 const jsonFilePath = process.env.JSON_FILE_PATH;
 
-// Chemins des dossiers
+// Chemin vers "dossiers" (contient les fichiers et l'arborescence 
+// de l'application c'est le dossier vers lequel on IMPORTE via l'interface
+// les fichiers et dossier d'Esperanto)
 const dossiersPath = path.join(__dirname, "..", "dossiers");
+
+// Chemin pour ranger les fichiers JSX (page numéro de dossier) 
+// généré par FolderTOJSX.cjs
 const dossiersjsxPath = path.join(__dirname, "..", "components", "dossiers_jsx");
 
 // Lire le fichier JSON
@@ -50,6 +55,7 @@ const extraireLiensExistants = (cheminFichierJSX) => {
 // Fonction pour générer le contenu JSX
 const genererContenu = (dossierInfo, fullDossierName, liensExistants, noticesToDelete) => {
     const { dossier, marque, libelle, notices } = dossierInfo;
+    // Vérifier utilité de cette ligne
     const nomDossierFormate = formatterNomDossier(dossier);
 
     const tousLesLiens = [...new Set([...liensExistants, ...notices.map(notice => `/dossiers/${fullDossierName}/16 - Notice ${dossier.substring(0, 8)}/${notice}`)])];
@@ -153,14 +159,14 @@ const copyDirectory = (source, destination) => {
     }
 };
 
-const supprimerFichierJSON = () => {
-    try {
-        fs.unlinkSync(jsonFilePath);
-        console.log(`Le fichier JSON ${jsonFilePath} a été supprimé avec succès.`);
-    } catch (error) {
-        console.error(`Erreur lors de la suppression du fichier JSON ${jsonFilePath}:`, error);
-    }
-  };
+// const supprimerFichierJSON = () => {
+//     try {
+//         fs.unlinkSync(jsonFilePath);
+//         console.log(`Le fichier JSON ${jsonFilePath} a été supprimé avec succès.`);
+//     } catch (error) {
+//         console.error(`Erreur lors de la suppression du fichier JSON ${jsonFilePath}:`, error);
+//     }
+//   };
   
 // Fonction principale
 const main = () => {
@@ -227,7 +233,7 @@ const main = () => {
     copyDirectory(srcDossiersPath, publicDossiersPath);
     console.log("Copie terminée.");
 
-    supprimerFichierJSON();
+    // supprimerFichierJSON();
 };
 
 // Exécuter le script

@@ -1,10 +1,15 @@
+require('dotenv').config();
 const fs = require('fs');
 const path = require('path');
 const generateRandomName = require('./RandomName.cjs');
-const dotenv = require('dotenv');
-dotenv.config();
 
+// Chemin vers "dossiers" (contient les fichiers et l'arborescence 
+// de l'application c'est le dossier vers lequel on IMPORTE via l'interface
+// les fichiers et dossier d'Esperanto)
 const dossiersPath = path.join(__dirname, '..', 'dossiers');
+
+// Utilisé par Clients.cjs pour ranger les fichiers JSX  
+// des répertoires clients
 const outputPath = path.join(__dirname, '..', 'components', 'dossiers_jsx');
 
 // Fonction pour formater le nom du dossier
