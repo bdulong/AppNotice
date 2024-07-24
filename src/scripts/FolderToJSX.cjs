@@ -48,16 +48,18 @@ const extraireLiensExistants = (cheminFichierJSX) => {
 };
 
 // Fonction pour générer le contenu JSX
-const genererContenu = (dossierInfo, fullDossierName, liensExistants) => {
+const genererContenu = (dossierInfo, fullDossierName, liensExistants, noticesToDelete) => {
     const { dossier, marque, libelle, notices } = dossierInfo;
     const nomDossierFormate = formatterNomDossier(dossier);
 
     const tousLesLiens = [...new Set([...liensExistants, ...notices.map(notice => `/dossiers/${fullDossierName}/16 - Notice ${dossier.substring(0, 8)}/${notice}`)])];
 
-    const noticesHTML = tousLesLiens.map(lien => {
-        const notice = path.basename(lien);
-        const type = getNoticeType(notice);
-        return `
+    const noticesHTML = tousLesLiens
+        .filter(lien => !noticesToDelete.includes(path.basename(lien)))
+        .map(lien => {
+            const notice = path.basename(lien);
+            const type = getNoticeType(notice);
+            return `
         <div className='CTA-notice'>
             <button 
                 onClick={() => window.openPDF('${lien}')}
@@ -67,7 +69,7 @@ const genererContenu = (dossierInfo, fullDossierName, liensExistants) => {
                 <h2>{t('sousDossiers.${type}')}</h2>
             </button>
         </div>`;
-    }).join("\n");
+        }).join("\n");
 
     return `import React from 'react'
 import { useTranslation } from 'react-i18next';
@@ -103,13 +105,33 @@ export default Page;
 `;
 };
 
-const supprimerFichierJSON = () => {
-  try {
-      fs.unlinkSync(jsonFilePath);
-      console.log(`Le fichier JSON ${jsonFilePath} a été supprimé avec succès.`);
-  } catch (error) {
-      console.error(`Erreur lors de la suppression du fichier JSON ${jsonFilePath}:`, error);
-  }
+// Fonction pour mettre à jour le contenu JSX existant
+const mettreAJourContenuJSX = (contenu, noticesToDelete) => {
+    const lignes = contenu.split('\n');
+    let resultat = [];
+    let dansDiv = false;
+    let divActuel = [];
+
+    for (const ligne of lignes) {
+        if (ligne.includes("<div className='CTA-notice'>")) {
+            dansDiv = true;
+            divActuel = [ligne];
+        } else if (dansDiv) {
+            divActuel.push(ligne);
+            if (ligne.includes("</div>")) {
+                dansDiv = false;
+                const divComplet = divActuel.join('\n');
+                if (!noticesToDelete.some(notice => divComplet.includes(notice))) {
+                    resultat.push(divComplet);
+                }
+                divActuel = [];
+            }
+        } else {
+            resultat.push(ligne);
+        }
+    }
+
+    return resultat.join('\n');
 };
 
 const copyDirectory = (source, destination) => {
@@ -131,34 +153,71 @@ const copyDirectory = (source, destination) => {
     }
 };
 
+const supprimerFichierJSON = () => {
+    try {
+        fs.unlinkSync(jsonFilePath);
+        console.log(`Le fichier JSON ${jsonFilePath} a été supprimé avec succès.`);
+    } catch (error) {
+        console.error(`Erreur lors de la suppression du fichier JSON ${jsonFilePath}:`, error);
+    }
+  };
+  
 // Fonction principale
 const main = () => {
     console.log("Début du traitement...");
 
-    for (const dossierInfo of jsonData.create) {
-        const { dossier, notices } = dossierInfo;
-        const dossierPrefix = dossier.substring(0, 8);
-        console.log(`Traitement du dossier: ${dossier}`);
+    // Traiter les notices à supprimer
+    const noticesToDeleteByDossier = {};
+    if (jsonData.delete) {
+        jsonData.delete.forEach(item => {
+            noticesToDeleteByDossier[item.dossier] = item.notices;
+        });
+    }
 
-        const fullDossierName = findMatchingFolder(dossiersPath, dossierPrefix);
-        if (!fullDossierName) {
-            console.error(`Dossier non trouvé pour le préfixe: ${dossierPrefix}`);
-            continue;
+    // Traiter les notices à créer ou mettre à jour
+    if (jsonData.create) {
+        for (const dossierInfo of jsonData.create) {
+            const { dossier, notices } = dossierInfo;
+            const dossierPrefix = dossier.substring(0, 8);
+            console.log(`Traitement du dossier: ${dossier}`);
+
+            const fullDossierName = findMatchingFolder(dossiersPath, dossierPrefix);
+            if (!fullDossierName) {
+                console.error(`Dossier non trouvé pour le préfixe: ${dossierPrefix}`);
+                continue;
+            }
+
+            // Vérifier si le fichier JSX existe déjà et extraire les liens existants
+            const cheminFichierJSX = path.join(dossiersjsxPath, `${dossier}.jsx`);
+            const liensExistants = extraireLiensExistants(cheminFichierJSX);
+
+            // Obtenir les notices à supprimer pour ce dossier
+            const noticesToDelete = noticesToDeleteByDossier[dossier] || [];
+
+            // Générer le contenu JSX avec les liens existants, les nouveaux, et en excluant les notices à supprimer
+            const contenuJSX = genererContenu(dossierInfo, fullDossierName, liensExistants, noticesToDelete);
+            fs.writeFileSync(cheminFichierJSX, contenuJSX);
+            console.log(`Fichier JSX mis à jour: ${dossier}.jsx`);
         }
+    }
 
-        // Vérifier si le fichier JSX existe déjà et extraire les liens existants
-        const cheminFichierJSX = path.join(dossiersjsxPath, `${dossier}.jsx`);
-        const liensExistants = extraireLiensExistants(cheminFichierJSX);
-
-        // Générer le contenu JSX avec les liens existants et les nouveaux
-        const contenuJSX = genererContenu(dossierInfo, fullDossierName, liensExistants);
-        fs.writeFileSync(cheminFichierJSX, contenuJSX);
-        console.log(`Fichier JSX mis à jour: ${dossier}.jsx`);
+    // Traiter les suppressions pour les dossiers non présents dans la section "create"
+    if (jsonData.delete) {
+        for (const item of jsonData.delete) {
+            const { dossier, notices } = item;
+            if (!jsonData.create || !jsonData.create.some(createItem => createItem.dossier === dossier)) {
+                const cheminFichierJSX = path.join(dossiersjsxPath, `${dossier}.jsx`);
+                if (fs.existsSync(cheminFichierJSX)) {
+                    let contenuJSX = fs.readFileSync(cheminFichierJSX, 'utf8');
+                    contenuJSX = mettreAJourContenuJSX(contenuJSX, notices);
+                    fs.writeFileSync(cheminFichierJSX, contenuJSX);
+                    console.log(`Fichier JSX mis à jour (suppressions uniquement): ${dossier}.jsx`);
+                }
+            }
+        }
     }
 
     console.log("Traitement terminé.");
-    
-    // supprimerFichierJSON();
 
     // Copier le répertoire dossiers vers public
     const srcDossiersPath = path.join(__dirname, "..", "dossiers");
@@ -167,6 +226,8 @@ const main = () => {
     console.log("Copie du répertoire dossiers vers public...");
     copyDirectory(srcDossiersPath, publicDossiersPath);
     console.log("Copie terminée.");
+
+    supprimerFichierJSON();
 };
 
 // Exécuter le script
