@@ -3,9 +3,8 @@ const fs = require('fs');
 const path = require('path');
 const generateRandomName = require('./RandomName.cjs');
 
-// Chemin vers "dossiers" (contient les fichiers et l'arborescence 
-// de l'application c'est le dossier vers lequel on IMPORTE via l'interface
-// les fichiers et dossier d'Esperanto)
+// Chemin vers "dossiers" (contient les fichiers et l'arborescence)
+// c'est le dossier TEMPORAIRE qui contient les fichiers et dossier qui seront sur Esperanto
 const dossiersPath = process.env.DOSSIERS_PATH;
 
 // Utilisé par Clients.cjs pour ranger les fichiers JSX  

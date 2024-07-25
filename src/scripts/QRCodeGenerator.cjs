@@ -5,9 +5,9 @@ const dotenv = require('dotenv');
 dotenv.config();
 const generateRandomName = require('./RandomName.cjs');
 
-const directoryPath = './src/dossiers'; // Chemin du répertoire à analyser
-const outputDir = './qrcodes/'; // Dossier de sortie pour les QR codes
-const baseURL = 'https://notices.marie-laure-plv.fr/';
+const jsonFilePath = process.env.JSON_QR; // Chemin du fichier JSON à lire
+const outputDir = process.env.OUTPUTDIR; // Dossier de sortie pour les QR codes
+const baseURL = process.env.BASEURL;
 const encryptionKey = process.env.REACT_APP_KEY;
 
 // Création du dossier de sortie s'il n'existe pas
@@ -15,28 +15,28 @@ if (!fs.existsSync(outputDir)){
     fs.mkdirSync(outputDir);
 }
 
-// Fonction pour obtenir les noms de dossiers
-function getDirectoryNames(dirPath) {
-  return fs.readdirSync(dirPath, { withFileTypes: true })
-    .filter(dirent => dirent.isDirectory())
-    .map(dirent => dirent.name);
+// Lecture du fichier JSON
+function readJSONFile(filePath) {
+  const rawData = fs.readFileSync(filePath);
+  return JSON.parse(rawData);
 }
 
-// Récupération des noms de dossiers
-const directoryNames = getDirectoryNames(directoryPath);
+// Récupération des noms à partir du fichier JSON
+const jsonData = readJSONFile(jsonFilePath);
+const directoryNames = jsonData.done;
 
-// Génération d'un QR code pour chaque dossier
-directoryNames.forEach((dirName, index) => {
-  // Prendre les 8 premiers caractères du nom du dossier
+// Génération d'un QR code pour chaque nom
+directoryNames.forEach((dirName) => {
+  // Prendre les 8 premiers caractères du nom
   const shortName = dirName.slice(0, 8);
   
   // Nom du fichier QR code
-  const outputPath = path.join(outputDir, `qrcode_${shortName}.png`);
+  const outputPath = path.join(outputDir, `${shortName}_qrcode.png`);
 
   // Vérifier si le QR code existe déjà
   if (fs.existsSync(outputPath)) {
     console.log(`QR code pour ${dirName} existe déjà: ${outputPath}`);
-    return; // Passer au dossier suivant
+    return; // Passer au nom suivant
   }
 
   // Encrypter le nom court

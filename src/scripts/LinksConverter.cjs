@@ -6,8 +6,7 @@ const generateRandomName = require('./RandomName.cjs');
 // Indique où trouver App.jsx (fichier de routage de l'application)
 const appFilePath = process.env.APP_FILE_PATH;
 
-// Indique le dossier qui contient les pages JSX à répertorier 
-// dans le routage de App.jsx
+// Indique le dossier qui contient les pages JSX à répertorier dans le routage de App.jsx
 const componentsDir = process.env.COMPONENTS_DIR;
 
 const files = fs.readdirSync(componentsDir).filter(file => file.endsWith('.jsx'));
@@ -42,6 +41,7 @@ const uniqueImportsAndRoutes = newImportsAndRoutes.filter(({ importLine, routeLi
     !existingImports.has(importLine) && !existingRoutes.has(routeLine) && !appFileContent.includes(randomName)
 );
 
+// Précise où placer les lignes d'import et de route dans App.jsx pour une meilleure lisibilitée
 if (uniqueImportsAndRoutes.length > 0) {
     const lines = appFileContent.split('\n');
     let importInsertIndex = lines.findIndex(line => line.includes('// Fin des imports des pages générées par LinksConverter.cjs'));

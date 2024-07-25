@@ -157,15 +157,6 @@ const copyDirectory = (source, destination) => {
         }
     }
 };
-
-// const supprimerFichierJSON = () => {
-//     try {
-//         fs.unlinkSync(jsonFilePath);
-//         console.log(`Le fichier JSON ${jsonFilePath} a été supprimé avec succès.`);
-//     } catch (error) {
-//         console.error(`Erreur lors de la suppression du fichier JSON ${jsonFilePath}:`, error);
-//     }
-//   };
   
 // Fonction principale
 const main = () => {
@@ -231,8 +222,6 @@ const main = () => {
     console.log("Copie du répertoire dossiers vers public...");
     copyDirectory(srcDossiersPath, publicDossiersPath);
     console.log("Copie terminée.");
-
-    // supprimerFichierJSON();
 };
 
 // Exécuter le script
