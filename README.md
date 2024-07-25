@@ -25,6 +25,10 @@
     - Génère le QR code avec la librairie 'qrcode'
     - Enregistre le QR code généré dans 'appnotice/public/qrcodes' avec le nom 'xx-xxxxx_qrcode.png'
 
+- Lancer la commande 'npm run build'
+
+- Placer le contenu du dossier 'build' dans 'www/NOTICES' du serveur WAN (OVH) avec le FTP
+
 ## Installation
 
 - Mettre le dossier appnotice dans le LAN
