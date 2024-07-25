@@ -10,7 +10,7 @@
 
 - Lancer Clients.cjs
     - Scanne 'appnotice/public/dossiers'
-    - Fais le lien entre les dossiers qui porte le même nom de "marque"
+    - Fais le lien entre les dossiers qui porte le même nom de la "marque"
     - Créer/Met à jour un fichier .JSX qui portent le nom de la "marque"
     - Dans ce fichier .JSX fais un lien en encryptant avec RandomName.cjs les n° de dossier pour rediriger vers le fichier .JSX du n° de dossier
 
@@ -28,6 +28,6 @@
 ## Installation
 
 - Mettre le dossier appnotice dans le LAN
-- Installer les dépendances (Node.js)
+- Installer la dépendance (Node.js)
 - Placer le fichier .bat dans le LAN
 - Créer une tâche planifiée qui exécute le .bat
