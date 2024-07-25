@@ -5,9 +5,13 @@ const dotenv = require('dotenv');
 dotenv.config();
 const generateRandomName = require('./RandomName.cjs');
 
-const jsonFilePath = process.env.JSON_QR; // Chemin du fichier JSON à lire
-const outputDir = process.env.OUTPUTDIR; // Dossier de sortie pour les QR codes
+// Chemin du fichier JSON à lire
+const jsonFilePath = process.env.JSON_QR; 
+// Dossier de sortie pour les QR codes
+const outputDir = process.env.OUTPUTDIR; 
+// Indique le début de l'URL à mettre avant l'url encrypté
 const baseURL = process.env.BASEURL;
+// Clé d'encryptage
 const encryptionKey = process.env.REACT_APP_KEY;
 
 // Création du dossier de sortie s'il n'existe pas
