@@ -7,11 +7,10 @@ import './App.css';
 import Landing from './components/Landing/landing.jsx';
 import PageErreur from './components/PageErreur/PageErreur.jsx';
 // Import des pages générées par LinksConverter.cjs :
-import PogjWXgvYqyZAwgzfFDv from './components/dossiers_jsx/ANTONIOPUIGSA.jsx';
 import LFRuGXpnnlShCOzyFXOh from './components/dossiers_jsx/24-14800.jsx';
 import YRSmdDeeZOEXRpqdbaKL from './components/dossiers_jsx/24-20661.jsx';
 import NJbPDpDYHOAagsgZmWnT from './components/dossiers_jsx/24-21161.jsx';
-import AEyUsyuJPdglBPvCZgIV from './components/dossiers_jsx/SEPHORASAS.jsx';
+import PogjWXgvYqyZAwgzfFDv from './components/dossiers_jsx/ANTONIOPUIGSA.jsx';
 // Fin des imports des pages générées par LinksConverter.cjs
 
 const Loading = () => <div>Chargement...</div>;
@@ -24,11 +23,10 @@ export default function App() {
                     <Routes>
                         <Route path="/" element={<Landing />} />
                         {/* Routes des pages générées par LinksConverter.cjs */}
-						<Route path="/PogjWXgvYqyZAwgzfFDv" element={<PogjWXgvYqyZAwgzfFDv />} />
 						<Route path="/LFRuGXpnnlShCOzyFXOh" element={<LFRuGXpnnlShCOzyFXOh />} />
-						<Route path="/NJbPDpDYHOAagsgZmWnT" element={<NJbPDpDYHOAagsgZmWnT />} />
-						<Route path="/AEyUsyuJPdglBPvCZgIV" element={<AEyUsyuJPdglBPvCZgIV />} />
 						<Route path="/YRSmdDeeZOEXRpqdbaKL" element={<YRSmdDeeZOEXRpqdbaKL />} />
+						<Route path="/NJbPDpDYHOAagsgZmWnT" element={<NJbPDpDYHOAagsgZmWnT />} />
+						<Route path="/PogjWXgvYqyZAwgzfFDv" element={<PogjWXgvYqyZAwgzfFDv />} />
                         {/* Fin des routes des pages générées par LinksConverter.cjs */}
                         <Route path="*" element={<PageErreur />} />
                     </Routes>

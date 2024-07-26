@@ -55,6 +55,9 @@ if (uniqueImportsAndRoutes.length > 0) {
     // Insérer les nouvelles lignes d'import
     lines.splice(importInsertIndex, 0, ...uniqueImportsAndRoutes.map(({ importLine }) => importLine));
 
+    // Ajuster routeInsertIndex après l'insertion des imports
+    routeInsertIndex += uniqueImportsAndRoutes.length;
+
     // Insérer les nouvelles lignes de Route
     lines.splice(routeInsertIndex, 0, ...uniqueImportsAndRoutes.map(({ routeLine }) => routeLine));
 
