@@ -1,26 +1,58 @@
 require('dotenv').config();
 const fs = require("fs");
 const path = require("path");
+const axios = require("axios");
 
-// Chemins définis dans le fichier .env
-const jsonFilePath = process.env.JSON_FILE_PATH;
+// URL de l'API pour récupérer les notices
+const apiNotice = process.env.API_NOTICE;
 
-// Chemin vers "dossiers" (contient les fichiers et l'arborescence 
-// de l'application c'est le dossier vers lequel on IMPORTE via l'interface
-// les fichiers et dossier d'Esperanto)
-const dossiersPath = process.env.DOSSIERS_PATH;
+// Chemin vers le serveur réseau
+const serverPath = "\\\\srvep-info\\dossiers\\";
 
-// Chemin pour ranger les fichiers JSX (page numéro de dossier) 
-// généré par FolderTOJSX.cjs
+// Chemin pour ranger les fichiers JSX générés
 const dossiersjsxPath = process.env.DOSSIERS_PATH_JSX;
 
-// Lire le fichier JSON
-const jsonData = JSON.parse(fs.readFileSync(jsonFilePath, 'utf8'));
+// Chemin pour ranger les fichiers téléchargés
+const publicDossiersPath = process.env.DOSSIERS_PATH;
 
 // Fonction pour trouver le dossier correspondant
 const findMatchingFolder = (basePath, folderPrefix) => {
     const folders = fs.readdirSync(basePath);
     return folders.find(folder => folder.startsWith(folderPrefix));
+};
+
+// Fonction pour télécharger et copier les fichiers
+const downloadAndCopyFiles = async (dossier, notices) => {
+    const dossierPrefix = dossier.substring(0, 8);
+    const fullDossierName = findMatchingFolder(serverPath, dossierPrefix);
+    
+    if (!fullDossierName) {
+        console.error(`Dossier non trouvé pour le préfixe: ${dossierPrefix}`);
+        return;
+    }
+
+    const sourcePath = path.join(serverPath, fullDossierName, "16 - Notice");
+    const destinationPath = path.join(publicDossiersPath, dossier);
+
+    if (!fs.existsSync(destinationPath)) {
+        fs.mkdirSync(destinationPath, { recursive: true });
+    }
+
+    for (const notice of notices) {
+        const sourceFile = path.join(sourcePath, notice);
+        const destinationFile = path.join(destinationPath, notice);
+
+        try {
+            if (fs.existsSync(sourceFile)) {
+                fs.copyFileSync(sourceFile, destinationFile);
+                console.log(`Fichier copié: ${notice}`);
+            } else {
+                console.error(`Fichier source non trouvé: ${sourceFile}`);
+            }
+        } catch (error) {
+            console.error(`Erreur lors de la copie du fichier ${notice}:`, error);
+        }
+    }
 };
 
 // Fonction pour formatter le nom du dossier
@@ -53,11 +85,11 @@ const extraireLiensExistants = (cheminFichierJSX) => {
 };
 
 // Fonction pour générer le contenu JSX
-const genererContenu = (dossierInfo, fullDossierName, liensExistants, noticesToDelete) => {
+const genererContenu = (dossierInfo, dossierName, liensExistants, noticesToDelete) => {
     const { dossier, marque, libelle, notices } = dossierInfo;
     const nomDossierFormate = formatterNomDossier(dossier);
 
-    const tousLesLiens = [...new Set([...liensExistants, ...notices.map(notice => `/dossiers/${fullDossierName}/16 - Notice ${dossier.substring(0, 8)}/${notice}`)])];
+    const tousLesLiens = [...new Set([...liensExistants, ...notices.map(notice => `/dossiers/${dossier}/${notice}`)])];
 
     const noticesHTML = tousLesLiens
         .filter(lien => !noticesToDelete.includes(path.basename(lien)))
@@ -139,89 +171,66 @@ const mettreAJourContenuJSX = (contenu, noticesToDelete) => {
     return resultat.join('\n');
 };
 
-// const copyDirectory = (source, destination) => {
-//     if (!fs.existsSync(destination)) {
-//         fs.mkdirSync(destination, { recursive: true });
-//     }
-
-//     const files = fs.readdirSync(source);
-
-//     for (const file of files) {
-//         const currentSource = path.join(source, file);
-//         const currentDestination = path.join(destination, file);
-
-//         if (fs.lstatSync(currentSource).isDirectory()) {
-//             copyDirectory(currentSource, currentDestination);
-//         } else {
-//             fs.copyFileSync(currentSource, currentDestination);
-//         }
-//     }
-// };
-  
 // Fonction principale
-const main = () => {
+const main = async () => {
     console.log("Début du traitement...");
 
-    // Traiter les notices à supprimer
-    const noticesToDeleteByDossier = {};
-    if (jsonData.delete) {
-        jsonData.delete.forEach(item => {
-            noticesToDeleteByDossier[item.dossier] = item.notices;
-        });
-    }
+    try {
+        // Appel à l'API
+        const response = await axios.get(apiNotice);
+        const jsonData = response.data;
 
-    // Traiter les notices à créer ou mettre à jour
-    if (jsonData.create) {
-        for (const dossierInfo of jsonData.create) {
-            const { dossier, notices } = dossierInfo;
-            const dossierPrefix = dossier.substring(0, 8);
-            console.log(`Traitement du dossier: ${dossier}`);
-
-            const fullDossierName = findMatchingFolder(dossiersPath, dossierPrefix);
-            if (!fullDossierName) {
-                console.error(`Dossier non trouvé pour le préfixe: ${dossierPrefix}`);
-                continue;
-            }
-
-            // Vérifier si le fichier JSX existe déjà et extraire les liens existants
-            const cheminFichierJSX = path.join(dossiersjsxPath, `${dossier}.jsx`);
-            const liensExistants = extraireLiensExistants(cheminFichierJSX);
-
-            // Obtenir les notices à supprimer pour ce dossier
-            const noticesToDelete = noticesToDeleteByDossier[dossier] || [];
-
-            // Générer le contenu JSX avec les liens existants, les nouveaux, et en excluant les notices à supprimer
-            const contenuJSX = genererContenu(dossierInfo, fullDossierName, liensExistants, noticesToDelete);
-            fs.writeFileSync(cheminFichierJSX, contenuJSX);
-            console.log(`Fichier JSX mis à jour: ${dossier}.jsx`);
+        // Traiter les notices à supprimer
+        const noticesToDeleteByDossier = {};
+        if (jsonData.delete) {
+            jsonData.delete.forEach(item => {
+                noticesToDeleteByDossier[item.dossier] = item.notices;
+            });
         }
-    }
 
-    // Traiter les suppressions pour les dossiers non présents dans la section "create"
-    if (jsonData.delete) {
-        for (const item of jsonData.delete) {
-            const { dossier, notices } = item;
-            if (!jsonData.create || !jsonData.create.some(createItem => createItem.dossier === dossier)) {
+        // Traiter les notices à créer ou mettre à jour
+        if (jsonData.create) {
+            for (const dossierInfo of jsonData.create) {
+                const { dossier, notices } = dossierInfo;
+                console.log(`Traitement du dossier: ${dossier}`);
+
+                // Télécharger et copier les fichiers
+                await downloadAndCopyFiles(dossier, notices);
+
+                // Vérifier si le fichier JSX existe déjà et extraire les liens existants
                 const cheminFichierJSX = path.join(dossiersjsxPath, `${dossier}.jsx`);
-                if (fs.existsSync(cheminFichierJSX)) {
-                    let contenuJSX = fs.readFileSync(cheminFichierJSX, 'utf8');
-                    contenuJSX = mettreAJourContenuJSX(contenuJSX, notices);
-                    fs.writeFileSync(cheminFichierJSX, contenuJSX);
-                    console.log(`Fichier JSX mis à jour (suppressions uniquement): ${dossier}.jsx`);
+                const liensExistants = extraireLiensExistants(cheminFichierJSX);
+
+                // Obtenir les notices à supprimer pour ce dossier
+                const noticesToDelete = noticesToDeleteByDossier[dossier] || [];
+
+                // Générer le contenu JSX avec les liens existants, les nouveaux, et en excluant les notices à supprimer
+                const contenuJSX = genererContenu(dossierInfo, dossier, liensExistants, noticesToDelete);
+                fs.writeFileSync(cheminFichierJSX, contenuJSX);
+                console.log(`Fichier JSX mis à jour: ${dossier}.jsx`);
+            }
+        }
+
+        // Traiter les suppressions pour les dossiers non présents dans la section "create"
+        if (jsonData.delete) {
+            for (const item of jsonData.delete) {
+                const { dossier, notices } = item;
+                if (!jsonData.create || !jsonData.create.some(createItem => createItem.dossier === dossier)) {
+                    const cheminFichierJSX = path.join(dossiersjsxPath, `${dossier}.jsx`);
+                    if (fs.existsSync(cheminFichierJSX)) {
+                        let contenuJSX = fs.readFileSync(cheminFichierJSX, 'utf8');
+                        contenuJSX = mettreAJourContenuJSX(contenuJSX, notices);
+                        fs.writeFileSync(cheminFichierJSX, contenuJSX);
+                        console.log(`Fichier JSX mis à jour (suppressions uniquement): ${dossier}.jsx`);
+                    }
                 }
             }
         }
+
+        console.log("Traitement terminé.");
+    } catch (error) {
+        console.error("Erreur lors du traitement:", error);
     }
-
-    console.log("Traitement terminé.");
-
-    // Copier le répertoire dossiers vers public
-    // const srcDossiersPath = path.join(__dirname, "..", "dossiers");
-    // const publicDossiersPath = path.join(__dirname, "..", "..", "public", "dossiers");
-    
-    // console.log("Copie du répertoire dossiers vers public...");
-    // copyDirectory(srcDossiersPath, publicDossiersPath);
-    // console.log("Copie terminée.");
 };
 
 // Exécuter le script
