@@ -6,8 +6,8 @@ const axios = require("axios");
 // URL de l'API pour récupérer les notices
 const apiNotice = process.env.API_NOTICE;
 
-// Chemin vers le serveur réseau
-const serverPath = "\\\\srvep-info\\dossiers\\";
+// Chemin vers le serveur Esperanto
+const serverPath = `\\\\${process.env.SERVER_NAME}\\dossiers`;
 
 // Chemin pour ranger les fichiers JSX générés
 const dossiersjsxPath = process.env.DOSSIERS_PATH_JSX;
