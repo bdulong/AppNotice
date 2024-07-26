@@ -36,7 +36,7 @@ Voici le fonctionnement en détail de l'application Notice MLPLV, ceci montre da
 
 ---
 
-- Placer le contenu du dossier `build` dans `www/NOTICES` du serveur WAN (OVH) avec le FTP
+- Placer le contenu du dossier `build` dans `www/NOTICES` du serveur WAN (OVH) avec le FTP et écraser les données existantes
 
 ## Installation
 
