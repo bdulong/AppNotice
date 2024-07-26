@@ -33,5 +33,5 @@
 
 - Mettre le dossier appnotice dans le LAN
 - Installer la dépendance (Node.js)
-- Placer le fichier .bat dans le LAN
+- Placer le fichier 'noticemlplv.bat' dans le LAN
 - Créer une tâche planifiée qui exécute le .bat
