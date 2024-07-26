@@ -23,26 +23,6 @@ const Page = () => {
                   
         <div className='CTA-notice'>
             <button 
-                onClick={() => window.openPDF('/dossiers/24-20661_ANTONIO_PUIG_S.A/16 - Notice 24-20661/24-20661_NOTICE_ELC_V01.pdf')}
-                className='PDF-link'
-            >
-                <img src={'/icons/ELC.svg'} alt={'ELC icon'} className="folder-icon" onError={(e) => {e.target.style.display = 'none'}} />
-                <h2>{t('sousDossiers.ELC')}</h2>
-            </button>
-        </div>
-
-        <div className='CTA-notice'>
-            <button 
-                onClick={() => window.openPDF('/dossiers/24-20661_ANTONIO_PUIG_S.A/16 - Notice 24-20661/24-20661_NOTICE_TPT_V01.pdf')}
-                className='PDF-link'
-            >
-                <img src={'/icons/TPT.svg'} alt={'TPT icon'} className="folder-icon" onError={(e) => {e.target.style.display = 'none'}} />
-                <h2>{t('sousDossiers.TPT')}</h2>
-            </button>
-        </div>
-
-        <div className='CTA-notice'>
-            <button 
                 onClick={() => window.openPDF('/dossiers/24-20661_ANTONIO_PUIG_S.A/16 - Notice 24-20661/24-20661_NOTICE_EMB_V01.pdf')}
                 className='PDF-link'
             >

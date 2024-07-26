@@ -15,17 +15,14 @@
          "notices":[
             "24-20661_NOTICE_EMB_V01.pdf"
          ]
+      },
+      {
+         "dossier":"24-21161",
+         "marque":"ANTONIO",
+         "libelle":"Reedition module miroir",
+         "notices":[
+            "24-21161_NOTICE_EMB_V01.pdf"
+         ]
       }
-    ],
-
-    "delete":[
-       {
-          "dossier":"24-21161",
-          "marque":"ANTONIO",
-          "libelle":"Reedition module miroir",
-          "notices":[
-             "24-21161_NOTICE_EMB_V01.pdf"
-          ]
-       }
     ]
  }
