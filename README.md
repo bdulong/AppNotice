@@ -30,7 +30,7 @@ Voici le fonctionnement en détail de l'application Notice MLPLV, ceci montre da
     - Encrypte avec RandomName.cjs les n° de dossier et y ajoute 'BaseURL' pour créer un lien fonctionnel
     - Génère le QR code avec la librairie 'qrcode'
     - Enregistre le QR code généré dans 'appnotice/public/qrcodes' avec le nom 'xx-xxxxx_qrcode.png'
-    - 
+      
 'npm run build'
 - Crée la build de l'application React et la range dans le dossier build situé dans 'appnotice'
 
